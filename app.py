@@ -31,8 +31,8 @@ df_chatbot = pd.read_csv("data/agriculture_chatbot_500.csv")
 chat_questions = df_chatbot["question"].tolist()
 chat_answers = df_chatbot["answer"].tolist()
 
-chat_model = SentenceTransformer('all-MiniLM-L6-v2')
-chat_embeddings = chat_model.encode(chat_questions)
+chat_model = None
+chat_embeddings = None
 
 SUPPORTED_LANGUAGES = ["en", "ml", "ta", "te", "kn", "hi"]
 
@@ -650,8 +650,13 @@ def chatbot_reply(user_text, lang="en"):
         else:
             user_text_en = user_text
 
-        user_embedding = chat_model.encode([user_text_en])
-        scores = cosine_similarity(user_embedding, chat_embeddings)[0]
+        global chat_model, chat_embeddings
+
+if chat_model is None:
+    print("🔄 Loading chatbot AI model...")
+    chat_model = SentenceTransformer('all-MiniLM-L6-v2')
+    chat_embeddings = chat_model.encode(chat_questions)
+    print("✅ Chatbot AI model loaded!")
         best_idx = scores.argmax()
 
         answer_en = chat_answers[best_idx]
