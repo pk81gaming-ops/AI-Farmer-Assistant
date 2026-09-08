@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Farmer Assistant</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f8f3;
+            color: #1f2937;
+        }
+
+        header {
+            background: #166534;
+            color: white;
+            padding: 22px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        header p {
+            margin: 5px 0 0;
+            opacity: 0.9;
+        }
+
+        .hero {
+            padding: 55px 7%;
+            background: linear-gradient(135deg, #dcfce7, #f0fdf4);
+        }
+
+        .hero h2 {
+            font-size: 42px;
+            margin: 0 0 15px;
+            color: #14532d;
+        }
+
+        .hero p {
+            font-size: 18px;
+            max-width: 700px;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 86%;
+            max-width: 1200px;
+            margin: 35px auto;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 22px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: #166534;
+            font-size: 23px;
+        }
+
+        .card p {
+            line-height: 1.5;
+            color: #4b5563;
+        }
+
+        input,
+        select,
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            font-size: 15px;
+        }
+
+        button {
+            background: #16a34a;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #15803d;
+        }
+
+        .result {
+            margin-top: 15px;
+            padding: 12px;
+            background: #f0fdf4;
+            border-radius: 8px;
+            line-height: 1.5;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .chat-box {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-box input {
+            flex: 1;
+        }
+
+        .chat-box button {
+            width: 120px;
+        }
+
+        footer {
+            margin-top: 50px;
+            padding: 25px;
+            text-align: center;
+            background: #14532d;
+            color: white;
+        }
+
+        .price-item {
+            padding: 10px;
+            margin-bottom: 8px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #16a34a;
+        }
+
+        @media (max-width: 600px) {
+            .hero h2 {
+                font-size: 30px;
+            }
+
+            .chat-box {
+                flex-direction: column;
+            }
+
+            .chat-box button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div>
+        <h1>🌾 AI Farmer Assistant</h1>
+        <p>Smart farming information at your fingertips</p>
+    </div>
+</header>
+
+<section class="hero">
+    <h2>Welcome, Farmer! 👨‍🌾</h2>
+    <p>
+        Get farming information, market prices, soil guidance,
+        crop calendars and AI-powered agricultural assistance
+        in one simple place.
+    </p>
+</section>
+
+<div class="container">
+
+    <div class="grid">
+
+        <!-- MARKET -->
+        <div class="card">
+            <h3>📈 Market Prices</h3>
+            <p>Search current market data by crop, market or district.</p>
+
+            <input
+                id="marketSearch"
+                type="text"
+                placeholder="Example: rice, tomato..."
+            >
+
+            <select id="marketState">
+                <option value="">All States</option>
+
+                {% for state in states %}
+                    <option value="{{ state }}">{{ state }}</option>
+                {% endfor %}
+            </select>
+
+            <button onclick="searchMarket()">
+                Search Market
+            </button>
+
+            <div id="marketResult" class="result">
+                Enter a crop or market to search.
+            </div>
+        </div>
+
+
+        <!-- SOIL -->
+        <div class="card">
+            <h3>🌱 Soil Guide</h3>
+            <p>
+                Learn about suitable crops, fertilizer tips,
+                advantages and limitations of different soils.
+            </p>
+
+            <select id="soilSelect">
+                <option value="">Select Soil Type</option>
+
+                {% for soil in soils %}
+                    <option value="{{ soil }}">{{ soil }}</option>
+                {% endfor %}
+            </select>
+
+            <button onclick="getSoil()">
+                View Soil Information
+            </button>
+
+            <div id="soilResult" class="result">
+                Select a soil type.
+            </div>
+        </div>
+
+
+        <!-- CALENDAR -->
+        <div class="card">
+            <h3>📅 Farming Calendar</h3>
+            <p>
+                Check sowing, planting and harvesting information
+                for your state.
+            </p>
+
+            <select id="calendarState">
+                <option value="">All States</option>
+
+                {% for state in states %}
+                    <option value="{{ state }}">{{ state }}</option>
+                {% endfor %}
+            </select>
+
+            <button onclick="getCalendar()">
+                View Calendar
+            </button>
+
+            <div id="calendarResult" class="result">
+                Select a state.
+            </div>
+        </div>
+
+
+        <!-- AI CHAT -->
+        <div class="card">
+            <h3>🤖 Agriculture Assistant</h3>
+            <p>
+                Ask questions about crops, fertilizer,
+                irrigation, pests, diseases and farming.
+            </p>
+
+            <div class="chat-box">
+                <input
+                    id="chatQuestion"
+                    type="text"
+                    placeholder="Ask your farming question..."
+                    onkeydown="if(event.key === 'Enter') askAI()"
+                >
+
+                <button onclick="askAI()">
+                    Ask AI
+                </button>
+            </div>
+
+            <div id="chatResult" class="result">
+                Your AI farming assistant is ready.
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<footer>
+    <p>🌾 AI Farmer Assistant</p>
+    <p>Helping farmers make smarter decisions with technology.</p>
+</footer>
+
+
+<script>
+
+async function searchMarket() {
+
+    const q = document.getElementById("marketSearch").value;
+    const state = document.getElementById("marketState").value;
+    const result = document.getElementById("marketResult");
+
+    result.innerHTML = "Loading market data...";
+
+    try {
+
+        const response = await fetch(
+            `/api/market?q=${encodeURIComponent(q)}&state=${encodeURIComponent(state)}`
+        );
+
+        const data = await response.json();
+
+        if (!data.length) {
+            result.innerHTML = "No market data found.";
+            return;
+        }
+
+        result.innerHTML = data.map(item => `
+            <div class="price-item">
+                <strong>${item.commodity || "Commodity"}</strong><br>
+                Market: ${item.market || "-"}<br>
+                District: ${item.district || "-"}<br>
+                Min Price: ₹${item.min_price || "-"}<br>
+                Max Price: ₹${item.max_price || "-"}<br>
+                Modal Price: ₹${item.modal_price || "-"}
+            </div>
+        `).join("");
+
+    } catch (error) {
+        result.innerHTML = "Unable to load market data.";
+    }
+}
+
+
+async function getSoil() {
+
+    const soil = document.getElementById("soilSelect").value;
+    const result = document.getElementById("soilResult");
+
+    if (!soil) {
+        result.innerHTML = "Please select a soil type.";
+        return;
+    }
+
+    result.innerHTML = "Loading soil information...";
+
+    try {
+
+        const response = await fetch(
+            `/api/soil?soil=${encodeURIComponent(soil)}`
+        );
+
+        const data = await response.json();
+
+        if (!data || !data.soil_type) {
+            result.innerHTML = "No information found.";
+            return;
+        }
+
+        result.innerHTML = `
+            <strong>${data.soil_type}</strong><br><br>
+
+            <strong>Advantages:</strong><br>
+            ${data.advantages || "-"}<br><br>
+
+            <strong>Limitations:</strong><br>
+            ${data.limitations || "-"}<br><br>
+
+            <strong>Best Crops:</strong><br>
+            ${data.best_crops || "-"}<br><br>
+
+            <strong>Fertilizer Tips:</strong><br>
+            ${data.fertilizer_tips || "-"}<br><br>
+
+            <strong>Pest Management:</strong><br>
+            ${data.pest_management || "-"}
+        `;
+
+    } catch (error) {
+        result.innerHTML = "Unable to load soil information.";
+    }
+}
+
+
+async function getCalendar() {
+
+    const state = document.getElementById("calendarState").value;
+    const result = document.getElementById("calendarResult");
+
+    result.innerHTML = "Loading farming calendar...";
+
+    try {
+
+        const response = await fetch(
+            `/api/calendar?state=${encodeURIComponent(state)}`
+        );
+
+        const data = await response.json();
+
+        if (!data.length) {
+            result.innerHTML = "No calendar data found.";
+            return;
+        }
+
+        result.innerHTML = data.map(item => `
+            <div class="price-item">
+                <strong>${item.state || "-"}</strong><br>
+                Season: ${item.season || "-"}<br>
+                Sowing: ${item.sowing || "-"}<br>
+                Planting: ${item.planting || "-"}<br>
+                Harvest: ${item.harvest || "-"}
+            </div>
+        `).join("");
+
+    } catch (error) {
+        result.innerHTML = "Unable to load farming calendar.";
+    }
+}
+
+
+async function askAI() {
+
+    const question =
+        document.getElementById("chatQuestion").value.trim();
+
+    const result =
+        document.getElementById("chatResult");
+
+    if (!question) {
+        result.innerHTML = "Please type a question.";
+        return;
+    }
+
+    result.innerHTML = "Thinking...";
+
+    try {
+
+        const response = await fetch("/api/chat", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                question: question
+            })
+
+        });
+
+        const data = await response.json();
+
+        result.innerHTML = `
+            <strong>🤖 Assistant:</strong><br>
+            ${data.answer || "No answer available."}
+        `;
+
+    } catch (error) {
+
+        result.innerHTML =
+            "Unable to connect to the agriculture assistant.";
+
+    }
+}
+
+</script>
+
+</body>
+</html>
