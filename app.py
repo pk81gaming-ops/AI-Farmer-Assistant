@@ -785,7 +785,7 @@ def disease():
         filename = secure_filename(img.filename)
         img_path = os.path.join(UPLOAD_FOLDER, filename)
         img.save(img_path)
-
+from predict_disease import predict_disease
         disease_name, confidence = predict_disease(img_path)
 
         return render_template("disease.html",
