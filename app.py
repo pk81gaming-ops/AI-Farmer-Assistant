@@ -13,7 +13,15 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 app = Flask(__name__)
 app.secret_key = "ai-farmer-assistant-secret-key"
+def translate(value):
+    return value
 
+
+@app.context_processor
+def inject_translate():
+    return {
+        "translate": translate
+    }
 
 def load_csv(filename):
     path = os.path.join(DATA_DIR, filename)
