@@ -3,7 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>AI Farmer Assistant</title>
+
+    <!-- Google Translate -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement(
+                {
+                    pageLanguage: 'en',
+                    includedLanguages:
+                    'en,ta,te,ml,kn,hi,mr,bn,gu,pa,or,as',
+                    layout:
+                    google.translate.TranslateElement.InlineLayout.SIMPLE
+                },
+                'google_translate_element'
+            );
+        }
+    </script>
+
+    <script
+        src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+    </script>
 
     <style>
         * {
@@ -20,12 +41,12 @@
         header {
             background: #166534;
             color: white;
-            padding: 22px 7%;
+            padding: 20px 7%;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 20px;
             flex-wrap: wrap;
-            gap: 10px;
         }
 
         header h1 {
@@ -35,23 +56,29 @@
 
         header p {
             margin: 5px 0 0;
-            opacity: 0.9;
+        }
+
+        .language {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            color: #111;
         }
 
         .hero {
-            padding: 55px 7%;
+            padding: 50px 7%;
             background: linear-gradient(135deg, #dcfce7, #f0fdf4);
         }
 
         .hero h2 {
-            font-size: 42px;
+            font-size: 40px;
             margin: 0 0 15px;
             color: #14532d;
         }
 
         .hero p {
             font-size: 18px;
-            max-width: 700px;
+            max-width: 750px;
             line-height: 1.6;
         }
 
@@ -63,7 +90,8 @@
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns:
+                repeat(auto-fit, minmax(280px, 1fr));
             gap: 22px;
         }
 
@@ -77,7 +105,7 @@
         .card h3 {
             margin-top: 0;
             color: #166534;
-            font-size: 23px;
+            font-size: 22px;
         }
 
         .card p {
@@ -118,6 +146,19 @@
             overflow-y: auto;
         }
 
+        .disease-card {
+            grid-column: 1 / -1;
+            border: 2px solid #bbf7d0;
+        }
+
+        .upload-box {
+            padding: 20px;
+            border: 2px dashed #86efac;
+            border-radius: 12px;
+            text-align: center;
+            background: #f0fdf4;
+        }
+
         .chat-box {
             display: flex;
             gap: 10px;
@@ -131,20 +172,20 @@
             width: 120px;
         }
 
-        footer {
-            margin-top: 50px;
-            padding: 25px;
-            text-align: center;
-            background: #14532d;
-            color: white;
-        }
-
         .price-item {
             padding: 10px;
             margin-bottom: 8px;
             background: white;
             border-radius: 8px;
             border-left: 4px solid #16a34a;
+        }
+
+        footer {
+            margin-top: 50px;
+            padding: 25px;
+            text-align: center;
+            background: #14532d;
+            color: white;
         }
 
         @media (max-width: 600px) {
@@ -166,29 +207,79 @@
 <body>
 
 <header>
+
     <div>
         <h1>🌾 AI Farmer Assistant</h1>
         <p>Smart farming information at your fingertips</p>
     </div>
+
+    <div class="language">
+        <div id="google_translate_element"></div>
+    </div>
+
 </header>
 
+
 <section class="hero">
+
     <h2>Welcome, Farmer! 👨‍🌾</h2>
+
     <p>
         Get farming information, market prices, soil guidance,
-        crop calendars and AI-powered agricultural assistance
-        in one simple place.
+        crop calendars, crop disease detection and
+        AI-powered agricultural assistance in one simple place.
     </p>
+
 </section>
+
 
 <div class="container">
 
     <div class="grid">
 
+
+        <!-- DISEASE DETECTION -->
+
+        <div class="card disease-card">
+
+            <h3>🌿 Crop Disease Detection</h3>
+
+            <p>
+                Upload a crop leaf image to check for possible
+                crop diseases.
+            </p>
+
+            <div class="upload-box">
+
+                <input
+                    type="file"
+                    id="diseaseImage"
+                    accept="image/*"
+                >
+
+                <button onclick="detectDisease()">
+                    🔍 Detect Crop Disease
+                </button>
+
+            </div>
+
+            <div id="diseaseResult" class="result">
+                Upload a crop leaf image to begin.
+            </div>
+
+        </div>
+
+
         <!-- MARKET -->
+
         <div class="card">
+
             <h3>📈 Market Prices</h3>
-            <p>Search current market data by crop, market or district.</p>
+
+            <p>
+                Search current market data by crop,
+                market or district.
+            </p>
 
             <input
                 id="marketSearch"
@@ -197,11 +288,19 @@
             >
 
             <select id="marketState">
-                <option value="">All States</option>
+
+                <option value="">
+                    All States
+                </option>
 
                 {% for state in states %}
-                    <option value="{{ state }}">{{ state }}</option>
+
+                <option value="{{ state }}">
+                    {{ state }}
+                </option>
+
                 {% endfor %}
+
             </select>
 
             <button onclick="searchMarket()">
@@ -211,23 +310,36 @@
             <div id="marketResult" class="result">
                 Enter a crop or market to search.
             </div>
+
         </div>
 
 
         <!-- SOIL -->
+
         <div class="card">
+
             <h3>🌱 Soil Guide</h3>
+
             <p>
-                Learn about suitable crops, fertilizer tips,
-                advantages and limitations of different soils.
+                Learn about suitable crops,
+                fertilizer tips, advantages and
+                limitations of different soils.
             </p>
 
             <select id="soilSelect">
-                <option value="">Select Soil Type</option>
+
+                <option value="">
+                    Select Soil Type
+                </option>
 
                 {% for soil in soils %}
-                    <option value="{{ soil }}">{{ soil }}</option>
+
+                <option value="{{ soil }}">
+                    {{ soil }}
+                </option>
+
                 {% endfor %}
+
             </select>
 
             <button onclick="getSoil()">
@@ -237,23 +349,35 @@
             <div id="soilResult" class="result">
                 Select a soil type.
             </div>
+
         </div>
 
 
         <!-- CALENDAR -->
+
         <div class="card">
+
             <h3>📅 Farming Calendar</h3>
+
             <p>
-                Check sowing, planting and harvesting information
-                for your state.
+                Check sowing, planting and harvesting
+                information for your state.
             </p>
 
             <select id="calendarState">
-                <option value="">All States</option>
+
+                <option value="">
+                    All States
+                </option>
 
                 {% for state in states %}
-                    <option value="{{ state }}">{{ state }}</option>
+
+                <option value="{{ state }}">
+                    {{ state }}
+                </option>
+
                 {% endfor %}
+
             </select>
 
             <button onclick="getCalendar()">
@@ -263,18 +387,23 @@
             <div id="calendarResult" class="result">
                 Select a state.
             </div>
+
         </div>
 
 
-        <!-- AI CHAT -->
+        <!-- AI ASSISTANT -->
+
         <div class="card">
+
             <h3>🤖 Agriculture Assistant</h3>
+
             <p>
                 Ask questions about crops, fertilizer,
                 irrigation, pests, diseases and farming.
             </p>
 
             <div class="chat-box">
+
                 <input
                     id="chatQuestion"
                     type="text"
@@ -285,12 +414,15 @@
                 <button onclick="askAI()">
                     Ask AI
                 </button>
+
             </div>
 
             <div id="chatResult" class="result">
                 Your AI farming assistant is ready.
             </div>
+
         </div>
+
 
     </div>
 
@@ -298,20 +430,35 @@
 
 
 <footer>
+
     <p>🌾 AI Farmer Assistant</p>
-    <p>Helping farmers make smarter decisions with technology.</p>
+
+    <p>
+        Helping farmers make smarter decisions
+        with technology.
+    </p>
+
 </footer>
 
 
 <script>
 
+
+/* MARKET */
+
 async function searchMarket() {
 
-    const q = document.getElementById("marketSearch").value;
-    const state = document.getElementById("marketState").value;
-    const result = document.getElementById("marketResult");
+    const q =
+        document.getElementById("marketSearch").value;
 
-    result.innerHTML = "Loading market data...";
+    const state =
+        document.getElementById("marketState").value;
+
+    const result =
+        document.getElementById("marketResult");
+
+    result.innerHTML =
+        "Loading market data...";
 
     try {
 
@@ -322,38 +469,80 @@ async function searchMarket() {
         const data = await response.json();
 
         if (!data.length) {
-            result.innerHTML = "No market data found.";
+
+            result.innerHTML =
+                "No market data found.";
+
             return;
         }
 
-        result.innerHTML = data.map(item => `
-            <div class="price-item">
-                <strong>${item.commodity || "Commodity"}</strong><br>
-                Market: ${item.market || "-"}<br>
-                District: ${item.district || "-"}<br>
-                Min Price: ₹${item.min_price || "-"}<br>
-                Max Price: ₹${item.max_price || "-"}<br>
-                Modal Price: ₹${item.modal_price || "-"}
-            </div>
-        `).join("");
+        result.innerHTML =
+            data.map(item => `
+
+                <div class="price-item">
+
+                    <strong>
+                        ${item.commodity || "Commodity"}
+                    </strong>
+
+                    <br>
+
+                    Market:
+                    ${item.market || "-"}
+
+                    <br>
+
+                    District:
+                    ${item.district || "-"}
+
+                    <br>
+
+                    Min Price:
+                    ₹${item.min_price || "-"}
+
+                    <br>
+
+                    Max Price:
+                    ₹${item.max_price || "-"}
+
+                    <br>
+
+                    Modal Price:
+                    ₹${item.modal_price || "-"}
+
+                </div>
+
+            `).join("");
 
     } catch (error) {
-        result.innerHTML = "Unable to load market data.";
+
+        result.innerHTML =
+            "Unable to load market data.";
+
     }
 }
 
 
+/* SOIL */
+
 async function getSoil() {
 
-    const soil = document.getElementById("soilSelect").value;
-    const result = document.getElementById("soilResult");
+    const soil =
+        document.getElementById("soilSelect").value;
+
+    const result =
+        document.getElementById("soilResult");
 
     if (!soil) {
-        result.innerHTML = "Please select a soil type.";
+
+        result.innerHTML =
+            "Please select a soil type.";
+
         return;
     }
 
-    result.innerHTML = "Loading soil information...";
+    result.innerHTML =
+        "Loading soil information...";
 
     try {
 
@@ -361,44 +550,71 @@ async function getSoil() {
             `/api/soil?soil=${encodeURIComponent(soil)}`
         );
 
-        const data = await response.json();
+        const data =
+            await response.json();
 
         if (!data || !data.soil_type) {
-            result.innerHTML = "No information found.";
+
+            result.innerHTML =
+                "No information found.";
+
             return;
         }
 
         result.innerHTML = `
-            <strong>${data.soil_type}</strong><br><br>
+
+            <strong>
+                ${data.soil_type}
+            </strong>
+
+            <br><br>
 
             <strong>Advantages:</strong><br>
-            ${data.advantages || "-"}<br><br>
+            ${data.advantages || "-"}
+
+            <br><br>
 
             <strong>Limitations:</strong><br>
-            ${data.limitations || "-"}<br><br>
+            ${data.limitations || "-"}
+
+            <br><br>
 
             <strong>Best Crops:</strong><br>
-            ${data.best_crops || "-"}<br><br>
+            ${data.best_crops || "-"}
+
+            <br><br>
 
             <strong>Fertilizer Tips:</strong><br>
-            ${data.fertilizer_tips || "-"}<br><br>
+            ${data.fertilizer_tips || "-"}
+
+            <br><br>
 
             <strong>Pest Management:</strong><br>
             ${data.pest_management || "-"}
+
         `;
 
     } catch (error) {
-        result.innerHTML = "Unable to load soil information.";
+
+        result.innerHTML =
+            "Unable to load soil information.";
+
     }
 }
 
 
+/* CALENDAR */
+
 async function getCalendar() {
 
-    const state = document.getElementById("calendarState").value;
-    const result = document.getElementById("calendarResult");
+    const state =
+        document.getElementById("calendarState").value;
 
-    result.innerHTML = "Loading farming calendar...";
+    const result =
+        document.getElementById("calendarResult");
+
+    result.innerHTML =
+        "Loading farming calendar...";
 
     try {
 
@@ -406,71 +622,199 @@ async function getCalendar() {
             `/api/calendar?state=${encodeURIComponent(state)}`
         );
 
-        const data = await response.json();
+        const data =
+            await response.json();
 
         if (!data.length) {
-            result.innerHTML = "No calendar data found.";
+
+            result.innerHTML =
+                "No calendar data found.";
+
             return;
         }
 
-        result.innerHTML = data.map(item => `
-            <div class="price-item">
-                <strong>${item.state || "-"}</strong><br>
-                Season: ${item.season || "-"}<br>
-                Sowing: ${item.sowing || "-"}<br>
-                Planting: ${item.planting || "-"}<br>
-                Harvest: ${item.harvest || "-"}
-            </div>
-        `).join("");
+        result.innerHTML =
+            data.map(item => `
+
+                <div class="price-item">
+
+                    <strong>
+                        ${item.state || "-"}
+                    </strong>
+
+                    <br>
+
+                    Season:
+                    ${item.season || "-"}
+
+                    <br>
+
+                    Sowing:
+                    ${item.sowing || "-"}
+
+                    <br>
+
+                    Planting:
+                    ${item.planting || "-"}
+
+                    <br>
+
+                    Harvest:
+                    ${item.harvest || "-"}
+
+                </div>
+
+            `).join("");
 
     } catch (error) {
-        result.innerHTML = "Unable to load farming calendar.";
+
+        result.innerHTML =
+            "Unable to load farming calendar.";
+
     }
 }
 
 
+/* AI CHAT */
+
 async function askAI() {
 
     const question =
-        document.getElementById("chatQuestion").value.trim();
+        document.getElementById("chatQuestion")
+        .value.trim();
 
     const result =
         document.getElementById("chatResult");
 
     if (!question) {
-        result.innerHTML = "Please type a question.";
+
+        result.innerHTML =
+            "Please type a question.";
+
         return;
     }
 
-    result.innerHTML = "Thinking...";
+    result.innerHTML =
+        "Thinking...";
 
     try {
 
-        const response = await fetch("/api/chat", {
+        const response =
+            await fetch("/api/chat", {
 
-            method: "POST",
+                method: "POST",
 
-            headers: {
-                "Content-Type": "application/json"
-            },
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
 
-            body: JSON.stringify({
-                question: question
-            })
+                body: JSON.stringify({
+                    question: question
+                })
 
-        });
+            });
 
-        const data = await response.json();
+        const data =
+            await response.json();
 
         result.innerHTML = `
-            <strong>🤖 Assistant:</strong><br>
-            ${data.answer || "No answer available."}
+
+            <strong>
+                🤖 Assistant:
+            </strong>
+
+            <br>
+
+            ${data.answer ||
+              "No answer available."}
+
         `;
 
     } catch (error) {
 
         result.innerHTML =
             "Unable to connect to the agriculture assistant.";
+
+    }
+}
+
+
+/* DISEASE DETECTION */
+
+async function detectDisease() {
+
+    const fileInput =
+        document.getElementById("diseaseImage");
+
+    const result =
+        document.getElementById("diseaseResult");
+
+    if (!fileInput.files.length) {
+
+        result.innerHTML =
+            "Please upload a crop leaf image.";
+
+        return;
+    }
+
+    result.innerHTML =
+        "Analyzing the crop image...";
+
+    const formData =
+        new FormData();
+
+    formData.append(
+        "image",
+        fileInput.files[0]
+    );
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/disease",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if (data.error) {
+
+            result.innerHTML =
+                data.error;
+
+            return;
+        }
+
+        result.innerHTML = `
+
+            <strong>
+                🌿 Prediction:
+            </strong>
+
+            <br>
+
+            ${data.disease || "Unknown"}
+
+            <br><br>
+
+            <strong>
+                Confidence:
+            </strong>
+
+            ${data.confidence || "-"}
+
+        `;
+
+    } catch (error) {
+
+        result.innerHTML =
+            "Disease detection is not connected yet. We will fix the prediction system next.";
 
     }
 }
