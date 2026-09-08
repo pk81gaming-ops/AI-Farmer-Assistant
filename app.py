@@ -4,7 +4,7 @@ import pandas as pd
 import requests
 import os
 from werkzeug.utils import secure_filename  
-from predict_disease import predict_disease
+
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 from googletrans import Translator
